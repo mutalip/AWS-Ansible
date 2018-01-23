@@ -1,1 +1,26 @@
 
+---
+- name: Create a sandbox instance
+  hosts: localhost
+  gather_facts: False
+  vars:
+    keypair: id_rsa
+    instance_type: t2.micro
+    image: ami-f2d3638a
+    region: us-west-2
+  tasks:
+    - name: Launch instance
+      ec2:
+         key_name: "{{ keypair }}"
+         group: default
+         instance_type: "{{ instance_type }}"
+         image: "{{ image }}"
+         wait: yes
+         count: 1
+         vpc_subnet_id: subnet-XXXXX
+         assign_public_ip: yes
+         region: "{{ region }}"
+      register: ec2
+    - name: Print all ec2 variables
+      debug: var=ec2
+
